@@ -17,7 +17,7 @@ The input data include:
 
 - A staff schedule that specifies, for each staff $i \in N$, day $t \in T$, and shift $s \in S$, whether staff $i$ is scheduled to work shift $s$ on day $t$ (otherwise they are off, denoted by $O$).
 - A demand table $d_{zst}$ indicating the required number of staff in zone $z \in Z$ during shift $s \in S$ on day $t \in T$.
-- A rotation rule for next-month assignments, represented by a zone successor mapping $$\sigma : Z \rightarrow Z$$, currently instantiated as $\text{Cargo} \rightarrow \text{Pax} \rightarrow \text{Vehicles} \rightarrow \text{Train} \rightarrow \text{Cargo}$.
+- A rotation rule for next-month assignments, represented by a zone successor mapping $\sigma : Z \rightarrow Z$, currently instantiated as $\text{Cargo} \rightarrow \text{Pax} \rightarrow \text{Vehicles} \rightarrow \text{Train} \rightarrow \text{Cargo}$.
 
 The project addresses two questions:
 
@@ -61,11 +61,11 @@ From these sheets, the following parameters are constructed:
 
 ### 3.1 Decision variables
 
-The MIP model defines:
+The MILP model defines:
 
-- Staff–zone assignment: x_{iz} = 1 \text{ if staff } i \text{ is assigned to zone } z \text{ for the entire horizon, } 0 \text{ otherwise, } \quad \forall i \in N, z \in Z.
+- Staff–zone assignment: $x_{iz} = 1 \text{ if staff } i \text{ is assigned to zone } z \text{ for the entire horizon, } 0 \text{ otherwise, } \quad \forall i \in N, z \in Z.$
 
-- Zone load bounds: $L^{\max} \in \mathbb{Z}, \quad L^{\min} \in \mathbb{Z}.$, representing the maximum and minimum number of staff assigned to any zone.
+- Zone load bounds: $L^{\max} \in \mathbb{Z}, \quad L^{\min} \in \mathbb{Z}$, representing the maximum and minimum number of staff assigned to any zone.
 
 ### 3.2 Objective function
 
@@ -122,7 +122,7 @@ This promotes an equitable distribution of staff among zones, subject to feasibi
    L^{\max}, L^{\min} \in \mathbb{Z}.
    $$
 
-The resulting model is a mixed-integer linear program solvable with standard MIP solvers such as Gurobi.
+The resulting model is a mixed-integer linear program solvable with standard MILP solvers such as Gurobi.
 
 ## 4. Rule-based assignment for next month (Q2)
 
@@ -146,19 +146,13 @@ This logic produces a rotation-based zone plan consistent with the current month
 The implementation is written in Python and relies on:
 
 - `openpyxl` for reading and writing the Excel workbook (`input.xlsx` → `output.xlsx`).
-- `gurobipy` for constructing and solving the MIP model.
+- `gurobipy` for constructing and solving the MILP model.
 
 The execution workflow is:
 
 1. Load `input.xlsx`.
 2. Parse demand, schedule tables, and previous-month assignments.
-3. Build and solve the MIP model for Q1 to obtain staff–zone assignments.
+3. Build and solve the MILP model for Question 1 to obtain staff–zone assignments.
 4. Embed the assignments as `"Shift Zone"` entries into the `Q1 Answer` sheet.
-5. Apply the rotation rule to construct Q2 assignments and write them to the `Q2 Answer` sheet.
+5. Apply the rotation rule to construct Question 2 assignments and write them to the `Q2 Answer` sheet.
 6. Save the updated workbook as `output.xlsx`.
-
-## 6. References
-
-- Pinedo, M. (2016). *Scheduling: Theory, Algorithms, and Systems*. Springer.
-- Ernst, A. T., Jiang, H., Krishnamoorthy, M., & Sier, D. (2004). Staff scheduling and rostering: A review of applications, methods and models. *European Journal of Operational Research*, 153(1), 3–27.
-- Gurobi Optimization, LLC. (2025). *Gurobi Optimizer Reference Manual*. Available at: https://www.gurobi.com
