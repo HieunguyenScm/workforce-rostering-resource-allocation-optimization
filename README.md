@@ -51,20 +51,11 @@ The model reads a workbook `input.xlsx` containing:
 
 From these sheets, the following parameters are constructed:
 
-- Availability indicator: $a_{ist} = \begin{cases} 1 & \text{if staff } i \text{ works shift } s \text{ on day } t, 0 & \text{otherwise.} \end{cases}$
+- Availability indicator: $a_{ist} = \begin{cases} 1 & \text{if staff } i \text{ works shift } s \text{ on day } t,\ 0 \text{ otherwise.} \end{cases}$
 
-- Demand:
-  $$
-  d_{zst} \in \mathbb{Z}_{\ge 0}
-  \quad \forall z \in Z, s \in S, t \in T.
-  $$
+- Demand: $d_{zst} \in \mathbb{Z}_{\ge 0} \quad \forall z \in Z, s \in S, t \in T.$
 
-- Previous-month zone assignment:
-  $$
-  p_i \in Z \cup \{\text{None}\}
-  \quad \forall i \in N,
-  $$
-  extracted from the `"Previous Month Schedule Table"`.
+- Previous-month zone assignment: $p_i \in Z \cup \{\text{None}\} \quad \forall i \in N.$ extracted from the `"Previous Month Schedule Table"`.
 
 ## 3. Mathematical formulation (Q1)
 
