@@ -1,6 +1,6 @@
 # Day–Shift–Zone-Staff Rostering
 
-This project implements a mixed-integer programming (MIP) model for assigning staff to operational zones over a monthly planning horizon in a day–shift setting. The approach integrates Excel-based data structures with a Gurobi optimization model to generate feasible and balanced staff–zone assignments subject to demand satisfaction and rotation rules for future periods.
+This project implements a MILP model for assigning staff to operational zones over a monthly planning horizon in a day–shift setting. The approach integrates Excel-based data structures with a Gurobi optimization model and a rule-based model in Python environment to generate feasible and balanced staff–zone assignments subject to demand satisfaction and rotation rules for future periods.
 
 ## 1. Problem description
 
