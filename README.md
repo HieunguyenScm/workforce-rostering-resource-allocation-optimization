@@ -55,7 +55,7 @@ From these sheets, the following parameters are constructed:
 
 - Demand: $d_{zst} \in \mathbb{Z}_{\ge 0} \quad \forall z \in Z, s \in S, t \in T.$
 
-- Previous-month zone assignment: $p_i \in Z \cup \{\text{None}\} \quad \forall i \in N.$ extracted from the `"Previous Month Schedule Table"`.
+- Previous-month zone assignment: $p_i \in Z \cup \{\text{None}\} \quad \forall i \in N$, extracted from the `"Previous Month Schedule Table"`.
 
 ## 3. Mathematical formulation (Q1)
 
