@@ -17,7 +17,7 @@ The input data include:
 
 - A staff schedule that specifies, for each staff $i \in N$, day $t \in T$, and shift $s \in S$, whether staff $i$ is scheduled to work shift $s$ on day $t$ (otherwise they are off, denoted by $O$).
 - A demand table $d_{zst}$ indicating the required number of staff in zone $z \in Z$ during shift $s \in S$ on day $t \in T$.
-- A rotation rule for next-month assignments, represented by a zone successor mapping $$\sigma : Z \rightarrow Z,$$ currently instantiated as $\text{Cargo} \rightarrow \text{Pax} \rightarrow \text{Vehicles} \rightarrow \text{Train} \rightarrow \text{Cargo}$.
+- A rotation rule for next-month assignments, represented by a zone successor mapping $$\sigma : Z \rightarrow Z$$, currently instantiated as $\text{Cargo} \rightarrow \text{Pax} \rightarrow \text{Vehicles} \rightarrow \text{Train} \rightarrow \text{Cargo}$.
 
 The project addresses two questions:
 
@@ -51,8 +51,7 @@ The model reads a workbook `input.xlsx` containing:
 
 From these sheets, the following parameters are constructed:
 
-- Availability indicator:
-  $$a_{ist} = \begin{cases} 1 & \text{if staff } i \text{ works shift } s \text{ on day } t, 0 & \text{otherwise.} \end{cases}$$
+- Availability indicator: $$a_{ist} = \begin{cases} 1 & \text{if staff } i \text{ works shift } s \text{ on day } t, 0 & \text{otherwise.} \end{cases}$$
 
 - Demand:
   $$
