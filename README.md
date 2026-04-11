@@ -63,21 +63,9 @@ From these sheets, the following parameters are constructed:
 
 The MIP model defines:
 
-- Staff–zone assignment:
-  $$
-  x_{iz} =
-  \begin{cases}
-  1 & \text{if staff } i \text{ is assigned to zone } z \text{ for the entire horizon}, \\
-  0 & \text{otherwise,}
-  \end{cases}
-  \quad \forall i \in N, z \in Z.
-  $$
+- Staff–zone assignment: x_{iz} = 1 \text{ if staff } i \text{ is assigned to zone } z \text{ for the entire horizon, } 0 \text{ otherwise, } \quad \forall i \in N, z \in Z.
 
-- Zone load bounds:
-  $$
-  L^{\max} \in \mathbb{Z}, \quad L^{\min} \in \mathbb{Z},
-  $$
-  representing the maximum and minimum number of staff assigned to any zone.
+- Zone load bounds: $L^{\max} \in \mathbb{Z}, \quad L^{\min} \in \mathbb{Z}.$, representing the maximum and minimum number of staff assigned to any zone.
 
 ### 3.2 Objective function
 
