@@ -51,7 +51,7 @@ The model reads a workbook `input.xlsx` containing:
 
 From these sheets, the following parameters are constructed:
 
-- Availability indicator: $a_{ist} = \begin{cases} 1 & \text{if staff } i \text{ works shift } s \text{ on day } t,\ 0 \text{ otherwise.} \end{cases}$
+- Availability indicator: $a_{ist} = 1 \text{ if staff } i \text{ works shift } s \text{ on day } t,\ 0 \text{ otherwise.}$
 
 - Demand: $d_{zst} \in \mathbb{Z}_{\ge 0} \quad \forall z \in Z, s \in S, t \in T.$
 
