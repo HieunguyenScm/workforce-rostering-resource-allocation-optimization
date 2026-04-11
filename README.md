@@ -21,12 +21,12 @@ The input data include:
 
 The project addresses two questions:
 
-1. **Q1 – Staff-to-zone assignment (optimization-based):**  
+1. **Question 1 – Staff-to-zone assignment (optimization-based):**  
    Assign each staff member $i \in N$ to exactly one zone $z \in Z$ for the entire planning horizon such that:
    - The zone–shift–day demand $d_{zst}$ is satisfied, given staff availability by shift and day.
    - The number of staff assigned to each zone is approximately balanced.
 
-2. **Q2 – Staff-to-zone assignment for next month (rule-based):**  
+2. **Question 2 – Staff-to-zone assignment for next month (rule-based):**  
    Given each staff member’s previous-month zone, determine next-month zones via the rotation rule $\sigma$, applying a simple fallback in case of missing historical data.
 
 ## 2. Data and implementation structure
@@ -52,13 +52,7 @@ The model reads a workbook `input.xlsx` containing:
 From these sheets, the following parameters are constructed:
 
 - Availability indicator:
-  $$
-  a_{ist} =
-  \begin{cases}
-  1 & \text{if staff } i \text{ works shift } s \text{ on day } t, \\
-  0 & \text{otherwise.}
-  \end{cases}
-  $$
+  $$a_{ist} = \begin{cases} 1 & \text{if staff } i \text{ works shift } s \text{ on day } t, 0 & \text{otherwise.} \end{cases}$$
 
 - Demand:
   $$
