@@ -10,8 +10,8 @@ In the current implementation:
 
 - Zones: $Z = \{\text{Cargo}, \text{Pax}, \text{Vehicles}, \text{Train}\}$.
 - Shifts: $S = \{\text{M}, \text{A}, \text{N}\}$.
-- Workdays: $T = \{\text{Day 1}, \text{Day 2}, \dots\}$, parsed from the input workbook.
-- Staff: $N = \{\text{Staff 1}, \text{Staff 2}, \dots\}$, parsed from the schedule table.
+- Workdays: $T = \{\text{Day 1}, \text{Day 2}, \dots\}$.
+- Staff: $N = \{\text{Staff 1}, \text{Staff 2}, \dots\}$.
 
 The input data include:
 
@@ -25,7 +25,7 @@ The project addresses two questions: (1) Question 1 – staff-to-zone assignment
 
 The model reads a workbook `input.xlsx` containing three main sheets. Sheet `Description` includes a table `"Demand Table"` with rows indexed by $(z,s)$ and columns indexed by workdays $t$, providing demand values $d_{zst}$. Sheet `Q1 Answer` contains a table `"Schedule Table"` with staff names in column B and, for each day $t$ (columns $C, D, \dots$), entries in $\{M, A, N, O\}$ describing whether staff $i$ is working a given shift or is off. Sheet `Q2 Answer` contains a `"Schedule Table"` of the same structure to be filled with zone-annotated shifts and a `"Previous Month Schedule Table"` where rows correspond to staff and cells contain either `O` or entries of the form `"Shift Zone"`, from which the previous-month zone is extracted.
 
-From these sheets, the following parameters are constructed. The availability indicator is defined as $a_{ist} = 1 \text{ if staff } i \text{ works shift } s \text{ on day } t,\ 0 \text{ otherwise.}$ The demand parameter is defined on a non-negative integer domain as $d_{zst} \in \mathbb{Z}_{\ge 0} \text{ for all } z \in Z, s \in S, t \in T.$ The previous-month zone assignment is $p_i \in Z \cup \{\text{None}\} \text{ for all } i \in N$, where $\text{None}$ denotes missing historical data.
+From these sheets, the following parameters are constructed. The availability-to-be-assigned indicator is defined as $a_{ist} = 1 \text{ if staff } i \text{ works shift } s \text{ on day } t,\ 0 \text{ otherwise.}$ The demand parameter is defined on a non-negative integer domain as $d_{zst} \in \mathbb{Z}_{\ge 0} \text{ for all } z \in Z, s \in S, t \in T.$ The previous-month zone assignment is $p_i \in Z \cup \{\text{None}\} \text{ for all } i \in N$, where $\text{None}$ denotes missing historical data.
 
 ## 3. Mathematical formulation (Q1)
 
