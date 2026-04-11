@@ -19,7 +19,11 @@ The input data include:
 - A demand table $d_{zst}$ indicating the required number of staff in zone $z \in Z$ during shift $s \in S$ on day $t \in T$.
 - A rotation rule for next-month assignments, represented by a zone successor mapping $\sigma : Z \rightarrow Z$, currently instantiated as $\text{Cargo} \rightarrow \text{Pax} \rightarrow \text{Vehicles} \rightarrow \text{Train} \rightarrow \text{Cargo}$.
 
-The project addresses two questions: (1) Question 1 – staff-to-zone assignment (optimization-based): assign each staff member $i \in N$ to exactly one zone $z \in Z$ for the entire planning horizon such that the zone–shift–day demand $d_{zst}$ is satisfied, given staff availability by shift and day, and the number of staff assigned to each zone is approximately balanced; (2) Question 2 – staff-to-zone assignment for next month (rule-based): given each staff member’s previous-month zone, determine next-month zones via the rotation rule $\sigma$, applying a simple fallback in case of missing historical data.
+The project addresses two questions: 
+
+(1) Question 1 – staff-to-zone assignment (optimization-based): assign each staff member $i \in N$ to exactly one zone $z \in Z$ for the entire planning horizon such that the zone–shift–day demand $d_{zst}$ is satisfied, given staff availability by shift and day, and the number of staff assigned to each zone is approximately balanced; 
+
+(2) Question 2 – staff-to-zone assignment for next month (rule-based): given each staff member’s previous-month zone, determine next-month zones via the rotation rule $\sigma$, applying a simple fallback in case of missing historical data.
 
 ## 2. Data and implementation structure
 
