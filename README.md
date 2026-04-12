@@ -60,7 +60,7 @@ For the next-month assignment, the project uses a rule-based mapping instead of 
 
 - For each staff $i$, the previous-month zone $p_i$ is extracted from the `"Previous Month Schedule Table"` by scanning the row until the first non-off entry `"Shift Zone"` is found.
 - The rotation function $\sigma : Z \rightarrow Z$ is then applied to obtain the next-month zone, that is $z_i^{\text{next}} = \sigma(p_i)$ if $p_i \in Z$ and $z_i^{\text{next}} = \text{Cargo}$ otherwise (fallback in case of missing or invalid historical data).
-- For each day $t$ and shift entry in the `"Schedule Table"` of `Q2 Answer`, the shift code $s \in S$ is replaced by the composite label `"s z_i^{next}"`, while off days `O` are kept unchanged, thereby generating a rotation-based zone plan consistent with the current month’s structure.
+- For each day $t$ and shift entry in the `"Schedule Table"` of `Q2 Answer`, the shift code $s \in S$ is replaced by the composite label $s z_i^{\text{next}}$, while off days `O` are kept unchanged, thereby generating a rotation-based zone plan consistent with the current month’s structure. 
 
 ## 5. Software and solution workflow
 
