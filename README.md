@@ -1,67 +1,144 @@
-# Day–Shift–Zone-Staff Rostering
+# Workforce Rostering & Resource Allocation Optimization
 
-This project implements a MILP model for assigning staff to operational zones over a monthly planning horizon in a day–shift setting. The approach integrates Excel-based data structures with a Gurobi optimization model and a rule-based model in Python environment to generate feasible and balanced staff–zone assignments subject to demand satisfaction and rotation rules for future periods.
+## Project Overview
 
-## 1. Problem description
+This is an instructor-guided operations analytics project focused on workforce rostering, shift planning, zone coverage, and resource allocation optimization.
 
-We consider a finite set of zones $Z$, shifts $S$, workdays $T$, and staff $N$.
+The project implements an Excel-integrated Mixed-Integer Linear Programming (MILP) model in Python using Jupyter Notebook and Gurobi solver. The model generates feasible monthly staff-zone rosters while satisfying staffing demand, balancing workload across zones, and enforcing predefined cyclic rotation rules.
 
-In the current implementation:
+This project demonstrates how optimization models can support operational planning and decision-making in environments where workforce allocation, resource constraints, and service coverage are critical.
 
-- Zones: $Z = \{\text{Cargo}, \text{Pax}, \text{Vehicles}, \text{Train}\}$.
-- Shifts: $S = \{\text{M}, \text{A}, \text{N}\}$.
-- Workdays: $T = \{\text{Day 1}, \text{Day 2}, \dots\}$.
-- Staff: $N = \{\text{Staff 1}, \text{Staff 2}, \dots\}$.
+---
 
-The input data include:
+## Business Context
 
-- A staff schedule that specifies, for each staff $i \in N$, day $t \in T$, and shift $s \in S$, whether staff $i$ is scheduled to work shift $s$ on day $t$ (otherwise they are off, denoted by $O$).
-- A demand table $d_{zst}$ indicating the required number of staff in zone $z \in Z$ during shift $s \in S$ on day $t \in T$.
-- A rotation rule for next-month assignments, represented by a zone successor mapping $\sigma : Z \rightarrow Z$, currently instantiated as $\text{Cargo} \rightarrow \text{Pax} \rightarrow \text{Vehicles} \rightarrow \text{Train} \rightarrow \text{Cargo}$.
+In operations and supply chain environments, workforce planning plays an important role in ensuring that the right number of staff are assigned to the right zones and shifts at the right time.
 
-The project addresses two questions: 
+Manual rostering can be time-consuming and prone to imbalance, especially when planners need to consider:
 
-- Question 1: Staff-to-zone assignment (optimization-based): assign each staff member $i \in N$ to exactly one zone $z \in Z$ for the entire planning horizon such that the zone–shift–day demand $d_{zst}$ is satisfied, given staff availability by shift and day, and the number of staff assigned to each zone is approximately balanced; 
-- Question 2: Staff-to-zone assignment for next month (rule-based): given each staff member’s previous-month zone, determine next-month zones via the rotation rule $\sigma$, applying a simple fallback in case of missing historical data.
+- Staffing demand by zone and shift
+- Staff availability
+- Workload balance
+- Zone rotation rules
+- Multi-day planning periods
+- Operational coverage requirements
 
-## 2. Data and implementation structure
+This project addresses these challenges by using an optimization-based decision-support model to automate and improve staff assignment decisions.
 
-The model reads a workbook `input.xlsx` containing three main sheets:
+---
 
-- Sheet `Description` includes a table `"Demand Table"` with rows indexed by $(z,s)$ and columns indexed by workdays $t$, providing demand values $d_{zst}$.
-- Sheet `Q1 Answer` contains a table `"Schedule Table"` with staff names in column B and, for each day $t$ (columns $C, D, \dots$), entries in $\{M, A, N, O\}$ describing whether staff $i$ is working a given shift or is off.
-- Sheet `Q2 Answer` contains a `"Schedule Table"` of the same structure to be filled with zone-annotated shifts and a `"Previous Month Schedule Table"` where rows correspond to staff and cells contain either `O` or entries of the form `"Shift Zone"`, from which the previous-month zone is extracted.
+## Problem Description
 
-From these sheets, the following parameters are constructed:
+The model considers a finite set of:
 
-- The availability-to-be-assigned indicator is defined as $a_{ist} = 1 \text{ if staff } i \text{ works shift } s \text{ on day } t,\ 0 \text{ otherwise.}$
-- The demand parameter is defined on a non-negative integer domain as $d_{zst} \in \mathbb{Z}_{\ge 0} \text{ for all } z \in Z, s \in S, t \in T.$
-- The previous-month zone assignment is $p_i \in Z \cup \{\text{None}\} \text{ for all } i \in N$, where $\text{None}$ denotes missing historical data.
+- Zones: Cargo, Pax, Vehicles, Train
+- Shifts: Morning, Afternoon, Night
+- Workdays: Day 1, Day 2, ...
+- Staff members: Staff 1, Staff 2, ...
 
-## 3. Mathematical formulation (Q1)
+The objective is to assign staff to zones and shifts across a monthly planning horizon while satisfying operational requirements and maintaining balanced staff-zone rotation.
 
-The MILP model defines the following decision variables:
+---
 
-- The staff–zone assignment variable is $x_{iz} = 1 \text{ if staff } i \text{ is assigned to zone } z \text{ for the entire horizon, } 0 \text{ otherwise, for all } i \in N, z \in Z.$
-- The zone load bounds are $L^{\max} \in \mathbb{Z}$ and $L^{\min} \in \mathbb{Z}$, representing respectively the maximum and minimum number of staff assigned to any zone.
+## Scope of Work
 
-The objective is to balance staff loading across zones by minimizing the difference between the maximum and minimum zone loads, that is $\min L^{\max} - L^{\min}$. This promotes an equitable distribution of staff among zones, subject to feasibility of the demand and assignment constraints.
+### 1. Workforce Rostering Optimization
 
-The model includes four groups of constraints: 
+- Formulated a staff assignment problem as a Mixed-Integer Linear Programming model.
+- Assigned staff to day-shift-zone combinations based on operational coverage requirements.
+- Ensured that each zone and shift receives the required staffing level.
 
-- Unique zone assignment per staff: each staff member must be assigned to exactly one zone over the entire planning horizon, i.e. $\sum_{z \in Z} x_{iz} = 1 \text{ for all } i \in N.$
-- Demand satisfaction: for each zone, shift, and day, the number of staff assigned to the zone and available to work the shift must cover the demand, i.e. $\sum_{i \in N} a_{ist} x_{iz} \ge d_{zst} \text{ for all } z \in Z, s \in S, t \in T.$ 
-- Definition of zone loads and bounds: the total number of staff assigned to each zone must lie between $L^{\min}$ and $L^{\max}$, i.e. $\sum_{i \in N} x_{iz} \le L^{\max} \text{ for all } z \in Z$ and $\sum_{i \in N} x_{iz} \ge L^{\min} \text{ for all } z \in Z.$ 
-- Integrality conditions require $x_{iz} \in \{0,1\} \text{ for all } i \in N, z \in Z$ and $L^{\max}, L^{\min} \in \mathbb{Z}$.
+### 2. Resource Allocation & Workload Balancing
 
-## 4. Rule-based assignment for next month (Q2)
+- Applied workload balancing logic to avoid unfair concentration of assignments.
+- Supported fair staff allocation across operational zones.
+- Reduced manual planning effort by generating structured roster outputs.
 
-For the next-month assignment, the project uses a rule-based mapping instead of solving an optimization model:
+### 3. Rule-Based Rotation Planning
 
-- For each staff $i$, the previous-month zone $p_i$ is extracted from the `"Previous Month Schedule Table"` by scanning the row until the first non-off entry `"Shift Zone"` is found.
-- The rotation function $\sigma : Z \rightarrow Z$ is then applied to obtain the next-month zone, that is $z_i^{\text{next}} = \sigma(p_i)$ if $p_i \in Z$ and $z_i^{\text{next}} = \text{Cargo}$ otherwise (fallback in case of missing or invalid historical data).
-- For each day $t$ and shift entry in the `"Schedule Table"` of `Q2 Answer`, the shift code $s \in S$ is replaced by the composite label $s z_i^{\text{next}}$, while off days `O` are kept unchanged, thereby generating a rotation-based zone plan consistent with the current month’s structure. 
+- Incorporated cyclic rotation rules across zones and planning periods.
+- Ensured staff-zone assignments follow predefined rotation logic.
+- Improved planning consistency for future roster cycles.
 
-## 5. Software and solution workflow
+### 4. Excel-Integrated Planning Workflow
 
-The implementation is written in Python and relies on `openpyxl` for reading and writing the Excel workbook (`input.xlsx` → `output.xlsx`) and `gurobipy` for constructing and solving the MILP model. The execution workflow is: load `input.xlsx`; parse demand, schedule tables, and previous-month assignments; build and solve the MILP model for Question 1 to obtain staff–zone assignments; embed these assignments as `"Shift Zone"` entries into the `Q1 Answer` sheet; apply the rotation rule to construct Question 2 assignments and write them to the `Q2 Answer` sheet; and finally save the updated workbook as `output.xlsx`.
+- Used Excel files as input and output layers for planning data.
+- Connected Excel-based data structures with Python optimization logic.
+- Generated roster outputs that can be reviewed and used by planners.
+
+### 5. Operations Analytics & Decision Support
+
+- Translated operational planning requirements into mathematical constraints.
+- Evaluated roster feasibility against staffing demand, shift coverage, and rotation rules.
+- Built a structured decision-support workflow for resource planning.
+
+---
+
+## Tools & Technologies
+
+- Microsoft Excel
+- Python
+- Jupyter Notebook
+- Gurobi Optimizer
+- Mixed-Integer Linear Programming
+- Operations Research
+- Resource Allocation
+- Workforce Planning
+
+---
+
+## Key Files
+
+| File | Description |
+|---|---|
+| `day_shift_zone_staff_rostering.ipynb` | Main Jupyter Notebook containing the optimization model and logic |
+| `input.xlsx` | Excel input file containing planning requirements and roster data |
+| `output.xlsx` | Excel output file containing generated staff-zone-shift roster |
+| `README.md` | Project documentation and business explanation |
+
+---
+
+## Key Learning Outcomes
+
+Through this project, I strengthened my ability to:
+
+- Translate operational planning problems into structured optimization models.
+- Understand how workforce allocation decisions affect service coverage and workload balance.
+- Apply MILP modeling logic to solve real-world resource planning problems.
+- Integrate Excel-based planning files with Python-based analytics workflows.
+- Document business context, model assumptions, input/output structure, and decision-support logic.
+- Connect operations research concepts with supply chain and workforce planning applications.
+
+---
+
+## Relevance to Supply Chain & Operations
+
+This project is relevant to supply chain and operations roles because it demonstrates practical capabilities in:
+
+- Operational planning
+- Resource allocation
+- Capacity and workforce planning
+- Optimization-based decision support
+- Excel-integrated analytics
+- Process automation
+- Structured problem solving
+
+Although the project focuses on workforce rostering, the same planning logic can be extended to supply chain use cases such as warehouse labor planning, delivery shift planning, production workforce allocation, and operational capacity balancing.
+
+---
+
+## Source & Attribution
+
+This repository is forked from the instructor’s original public GitHub project:
+
+**Original repository:** `thanhtranviet248/day-shift-zone-staff-rostering`
+
+The original project demonstrates an Excel-integrated MILP optimization model for assigning staff to operational zones and shifts under staffing demand, workload balance, and cyclic rotation constraints.
+
+This fork is used as a portfolio evidence project. My contribution focuses on understanding the model logic, documenting the business context, explaining the input/output structure, and connecting the project to supply chain operations planning and resource allocation.
+
+---
+
+## Disclaimer
+
+This project is used for learning and portfolio demonstration purposes. It is based on an instructor-guided public repository and does not contain confidential company data.
